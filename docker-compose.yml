@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: CC-BY-4.0
+services:
+  perf-lab:
+    build: .
+    volumes:
+      - ./results:/ran_perf_lab/results
+    environment:
+      ITERATIONS: "20"
+      WARMUP: "5"
