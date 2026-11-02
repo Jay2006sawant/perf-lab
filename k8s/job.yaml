@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: CC-BY-4.0
+# Example one-shot benchmark Job (build image locally: docker build -t ran-perf-lab .)
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ran-perf-lab-bench
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: bench
+          image: ran-perf-lab:latest
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/bash", "-lc", "./scripts/ci_in_container.sh"]
+          volumeMounts:
+            - name: results
+              mountPath: /ran_perf_lab/results
+      volumes:
+        - name: results
+          emptyDir: {}
