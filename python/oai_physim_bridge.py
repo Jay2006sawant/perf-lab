@@ -106,7 +106,7 @@ def main() -> int:
         print(
             "OAI build not found. From repo root:\n"
             "  mkdir -p build && cd build && cmake .. -GNinja && ninja nr_dlsim nr_ulsim\n"
-            "Then: OAI_BUILD=$PWD python3 LFX/perf-lab/python/oai_physim_bridge.py",
+            "Then: OAI_BUILD=$PWD python3 python/oai_physim_bridge.py",
             file=sys.stderr,
         )
         return 2

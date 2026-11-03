@@ -26,7 +26,7 @@ Record before benchmarking:
 - `cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
 - Whether isolcpus are used (`cat /proc/cmdline`)
 
-Aligns with Duranta OAI `doc/tuning_and_security.md` and internship **noise floor** deliverable.
+Aligns with common RAN benchmarking practice: record governor and isolation settings alongside timing JSON.
 
 ## perf
 
