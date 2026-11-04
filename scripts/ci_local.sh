@@ -20,4 +20,7 @@ if command -v perf >/dev/null 2>&1; then
     2> "${ROOT}/results/perf_verify.stat" || true
 fi
 
+chmod +x "${ROOT}/scripts/capture_host_tuning.sh" 2>/dev/null || true
+"${ROOT}/scripts/capture_host_tuning.sh" || true
+
 echo "Local CI passed. See ${ROOT}/results/"

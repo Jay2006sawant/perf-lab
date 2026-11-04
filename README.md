@@ -215,6 +215,20 @@ cd "$OAI_BUILD"
 
 GitHub Actions (`.github/workflows/ci.yml`) runs the same steps as `ci_local.sh` on push.
 
+## Skills this repo exercises (reviewer checklist)
+
+| Topic | Where in the repo |
+|--------|-------------------|
+| SIMD intrinsics | `src/dotproduct.c`, `cplx_dot.c`, `phaserot.c`, `inspect_simd_asm.sh` |
+| Compiler flags | `compare_build_flags.sh`, `RAN_PERF_LAB_NATIVE` CMake option |
+| Linux tuning context | `cpufreq_governor` in manifest JSON, `capture_host_tuning.sh` |
+| perf | `ci_local.sh`, `run_with_perf.sh`, optional `run_flamegraph.sh` |
+| 5G / PHY intuition | `docs/WIRELESS.md`, OAI optional bridge |
+| Cross-run comparison | `compare_json_runs.py` (two JSON files, percent delta) |
+| Docker / Kubernetes | `Dockerfile`, `docker-compose.yml`, `k8s/job.yaml` |
+
+Not included: Tracy, VTune, DPDK, PREEMPT_RT, CUDA (use full OAI tree for those when needed).
+
 ## Methodology notes
 
 1. **Verify before timing** so SIMD paths cannot drift from scalar reference.  

@@ -50,6 +50,22 @@ static void read_cpu_model(char *model, size_t buflen)
   fclose(f);
 }
 
+static void read_cpufreq_governor(char *gov, size_t buflen)
+{
+  strncpy(gov, "unknown", buflen);
+  FILE *f = fopen("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor", "r");
+  if (!f) {
+    return;
+  }
+  if (fgets(gov, buflen, f)) {
+    size_t n = strlen(gov);
+    while (n > 0 && (gov[n - 1] == '\n' || gov[n - 1] == '\r')) {
+      gov[--n] = '\0';
+    }
+  }
+  fclose(f);
+}
+
 static long read_memtotal_kb(void)
 {
   FILE *f = fopen("/proc/meminfo", "r");
@@ -73,7 +89,9 @@ int write_platform_manifest(const char *output_path)
   char model[256];
   char kernel[512];
   char hostname[256];
+  char governor[64];
   read_cpu_model(model, sizeof(model));
+  read_cpufreq_governor(governor, sizeof(governor));
   kernel[0] = '\0';
   FILE *kv = fopen("/proc/version", "r");
   if (kv) {
@@ -102,6 +120,9 @@ int write_platform_manifest(const char *output_path)
   json_escape(fp, model);
   fprintf(fp, ",\n");
   fprintf(fp, "  \"mem_total_kb\": %ld,\n", mem_kb);
+  fprintf(fp, "  \"cpufreq_governor\": ");
+  json_escape(fp, governor);
+  fprintf(fp, ",\n");
   fprintf(fp, "  \"kernel\": ");
   json_escape(fp, kernel);
   fprintf(fp, ",\n");
