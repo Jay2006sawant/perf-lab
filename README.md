@@ -229,6 +229,26 @@ GitHub Actions (`.github/workflows/ci.yml`) runs the same steps as `ci_local.sh`
 
 Not included: Tracy, VTune, DPDK, PREEMPT_RT, CUDA (use full OAI tree for those when needed).
 
+### Example: portable vs native on one host
+
+```bash
+./scripts/compare_build_flags.sh
+python3 python/compare_json_runs.py results/compare_flags/bench_O2.json results/compare_flags/bench_native.json
+```
+
+`mean_ns` can rise on some kernels when the governor is in **powersave** or the laptop thermals limit turbo. That is expected; record `results/host_tuning.txt` next to the JSON.
+
+### perf and flamegraphs
+
+`ci_local.sh` writes `results/perf_verify.stat` when `perf stat` works. For `run_flamegraph.sh`, if you see `perf_event_paranoid=4`, the kernel blocks call graphs until policy is relaxed (development machines only):
+
+```bash
+cat /proc/sys/kernel/perf_event_paranoid
+# optional local dev:
+sudo sysctl -w kernel.perf_event_paranoid=-1
+./scripts/run_flamegraph.sh
+```
+
 ## Methodology notes
 
 1. **Verify before timing** so SIMD paths cannot drift from scalar reference.  

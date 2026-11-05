@@ -19,9 +19,19 @@ if [[ ! -x "${BIN}" ]]; then
 fi
 mkdir -p "${OUT}"
 
-perf record -F 997 -g -o "${DATA}" -- \
+if [[ -r /proc/sys/kernel/perf_event_paranoid ]] && [[ "$(cat /proc/sys/kernel/perf_event_paranoid)" -ge 2 ]]; then
+  echo "perf_event_paranoid=$(cat /proc/sys/kernel/perf_event_paranoid) limits profiling."
+  echo "For local dev only: sudo sysctl -w kernel.perf_event_paranoid=-1"
+  echo "Or use perf stat via ci_local.sh / run_with_perf.sh when paranoid is 0 or 1."
+  exit 0
+fi
+
+if ! perf record -F 997 -g -o "${DATA}" -- \
   "${BIN}" bench --iterations 8 --warmup 2 --seed 3 \
-  --output "${OUT}/flame_bench.json"
+  --output "${OUT}/flame_bench.json"; then
+  echo "perf record failed (permissions or security policy)"
+  exit 0
+fi
 
 perf script -i "${DATA}" >"${OUT}/perf_bench.script"
 echo "Wrote ${OUT}/perf_bench.script"
